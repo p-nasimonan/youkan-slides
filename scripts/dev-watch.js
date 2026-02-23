@@ -1,11 +1,17 @@
 #!/usr/bin/env node
 
+import { watch } from 'fs';
+import { spawn } from 'child_process';
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, statSync } from 'fs';
 import { dirname, resolve, join, relative } from 'path';
 
 const SLIDES_DIR = 'slides';
 const PROCESSED_DIR = '.processed';
 
+let marpServer = null;
+let isPreprocessing = false;
+
+// Preprocess functions (same as preprocess-all.js)
 function processIncludes(content, baseDir) {
   const includeRegex = /<!--\s*@include\s+(.+?)\s*(?:(\w+))?\s*-->/g;
 
@@ -63,12 +69,10 @@ function preprocessFile(inputPath) {
   const content = readFileSync(inputPath, 'utf-8');
   const baseDir = dirname(inputPath);
 
-  // ファイルの階層深さを計算（slides/ からの相対パス）
   const relativePath = relative(SLIDES_DIR, inputPath);
   const depth = relativePath.split('/').length - 1;
   const prefix = '../'.repeat(depth + 1);
 
-  // 1. ショートコード展開（相対パスを計算して渡す）
   let withShortcodes = content;
 
   // @logo(name) or @logo(name, size)
@@ -92,7 +96,6 @@ function preprocessFile(inputPath) {
   withShortcodes = withShortcodes.replace(/@closing\(social\)/g, `<!-- @include ${prefix}components/closing.md social -->`);
   withShortcodes = withShortcodes.replace(/@closing\(qr\)/g, `<!-- @include ${prefix}components/closing.md withqr -->`);
 
-  // 2. インクルード処理
   const processed = processIncludes(withShortcodes, baseDir);
 
   const outputPath = join(PROCESSED_DIR, relativePath);
@@ -106,8 +109,11 @@ function preprocessFile(inputPath) {
   return outputPath;
 }
 
-function main() {
-  console.log('🔄 Preprocessing slides with includes...\n');
+function preprocessAll() {
+  if (isPreprocessing) return;
+
+  isPreprocessing = true;
+  console.log('🔄 Preprocessing slides...');
 
   if (!existsSync(PROCESSED_DIR)) {
     mkdirSync(PROCESSED_DIR, { recursive: true });
@@ -117,12 +123,68 @@ function main() {
   let processedCount = 0;
 
   for (const file of files) {
-    const output = preprocessFile(file);
-    console.log(`  ✓ ${file} → ${output}`);
-    processedCount++;
+    try {
+      preprocessFile(file);
+      processedCount++;
+    } catch (error) {
+      console.error(`❌ Error processing ${file}:`, error.message);
+    }
   }
 
-  console.log(`\n✅ Preprocessed ${processedCount} file(s)\n`);
+  console.log(`✅ Preprocessed ${processedCount} file(s)\n`);
+  isPreprocessing = false;
+}
+
+function startMarpServer() {
+  console.log('🚀 Starting Marp server...\n');
+
+  marpServer = spawn('npx', ['@marp-team/marp-cli', '--server', '--input-dir', PROCESSED_DIR], {
+    stdio: 'inherit',
+    shell: true
+  });
+
+  marpServer.on('error', (error) => {
+    console.error('❌ Failed to start Marp server:', error);
+    process.exit(1);
+  });
+}
+
+function main() {
+  console.log('👀 Watching slides directory for changes...\n');
+
+  // Initial preprocessing
+  preprocessAll();
+
+  // Start Marp server
+  startMarpServer();
+
+  // Watch for changes
+  const watcher = watch(SLIDES_DIR, { recursive: true }, (eventType, filename) => {
+    if (filename && filename.endsWith('.md')) {
+      console.log(`📝 Detected change in ${filename}`);
+      preprocessAll();
+    }
+  });
+
+  // Also watch components directory
+  if (existsSync('components')) {
+    watch('components', { recursive: true }, (eventType, filename) => {
+      if (filename && filename.endsWith('.md')) {
+        console.log(`📝 Detected change in components/${filename}`);
+        preprocessAll();
+      }
+    });
+  }
+
+  // Cleanup on exit
+  process.on('SIGINT', () => {
+    console.log('\n\n👋 Shutting down...');
+    watcher.close();
+    if (marpServer) {
+      marpServer.kill();
+    }
+    process.exit(0);
+  });
 }
 
 main();

@@ -30,6 +30,8 @@ pnpm run dev
 
 ブラウザで `http://localhost:8080` を開くと、自動リロード付きでプレビュー可能です。
 
+ファイルを編集すると自動的にショートコードが展開され、リアルタイムでプレビューに反映されます。
+
 ### 2. 新規スライド作成
 
 ```bash
@@ -49,5 +51,43 @@ pnpm run list
 
 現在のスライドを階層別に一覧表示します。
 
-### ビルド
-githubpagesにビルドされます。indexは自作
+### 4. ビルド
+
+```bash
+pnpm run build
+```
+
+GitHub Pages にデプロイするための HTML を生成します。index.html も自動生成されます。
+
+## ショートコード
+
+簡単にスライドを作成するためのショートコードが使えます。
+
+### 自己紹介
+
+```markdown
+@intro              # フル自己紹介スライド
+@intro(compact)     # コンパクト版（1行）
+```
+
+### クロージング
+
+```markdown
+@closing            # シンプル版
+@closing(social)    # SNS付き
+@closing(qr)        # QRコード付き
+```
+
+### 技術ロゴ
+
+```markdown
+@logo(kubernetes)           # デフォルトサイズ（200px）
+@logo(docker, 150)          # カスタムサイズ
+@logo(aws)                  # AWS
+@logo(gcp)                  # Google Cloud
+@logo(azure)                # Azure
+```
+
+利用可能なロゴ: kubernetes, docker, aws, gcp, azure, github, gitlab, terraform, ansible, prometheus, grafana, nginx, redis, postgresql, mysql, mongodb, python, go, rust, nodejs, react, vue, linux, ubuntu, debian, vscode, vim, git, argocd 他
+
+詳細は [components/tech-logos.md](components/tech-logos.md) を参照してください。

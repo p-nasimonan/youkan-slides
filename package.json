@@ -4,11 +4,11 @@
   "description": "LT・技術発表用スライド管理リポジトリ（Marp使用）",
   "type": "module",
   "scripts": {
-    "dev": "marp --server --input-dir slides/",
+    "dev": "node scripts/dev-watch.js",
     "build": "node scripts/preprocess-all.js && marp --input-dir .processed/ --output dist/ && node scripts/create-index.js",
     "build:pdf": "marp --input-dir slides/ --output dist/pdf/ --pdf",
     "preview": "marp --preview slides/",
-    "preprocess": "node scripts/preprocess.js",
+    "preprocess": "node scripts/preprocess-all.js",
     "new": "node scripts/new-slide.js",
     "list": "node scripts/list-slides.js",
     "clean": "rm -rf dist/ .processed/",
