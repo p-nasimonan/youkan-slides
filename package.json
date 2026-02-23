@@ -1,0 +1,37 @@
+{
+  "name": "youkan-slides",
+  "version": "1.0.0",
+  "description": "LT・技術発表用スライド管理リポジトリ（Marp使用）",
+  "type": "module",
+  "scripts": {
+    "dev": "marp --server --input-dir slides/",
+    "build": "node scripts/preprocess-all.js && marp --input-dir .processed/ --output dist/ && node scripts/create-index.js",
+    "build:pdf": "marp --input-dir slides/ --output dist/pdf/ --pdf",
+    "preview": "marp --preview slides/",
+    "preprocess": "node scripts/preprocess.js",
+    "new": "node scripts/new-slide.js",
+    "list": "node scripts/list-slides.js",
+    "clean": "rm -rf dist/ .processed/",
+    "lint": "markdownlint 'slides/**/*.md'",
+    "format": "prettier --write 'slides/**/*.md'"
+  },
+  "keywords": [
+    "marp",
+    "slides",
+    "presentation",
+    "LT",
+    "kubernetes",
+    "homelab"
+  ],
+  "author": "youkan",
+  "license": "MIT",
+  "devDependencies": {
+    "@marp-team/marp-cli": "^4.1.0",
+    "markdownlint-cli": "^0.43.0",
+    "prettier": "^3.4.2"
+  },
+  "volta": {
+    "node": "22.13.1",
+    "pnpm": "9.15.4"
+  }
+}

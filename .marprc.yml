@@ -1,0 +1,10 @@
+# Marp CLI configuration
+html: true
+allowLocalFiles: true
+
+# Custom theme directory
+themeSet:
+  - ./themes/
+
+# Default output settings
+output: dist/
