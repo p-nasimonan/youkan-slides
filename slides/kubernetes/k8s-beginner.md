@@ -3,22 +3,25 @@ marp: true
 theme: youkan
 paginate: true
 header: ''
-footer: 'Kubernetes入門 | @youkan'
+footer: 'Kubernetes入門 | youkan.uk'
 ---
 
 <!-- _class: title k8s -->
 
 # Kubernetes入門
 
-## コンテナオーケストレーションの第一歩
+## とりあえず使えるようにする
 
-**youkan** | エンジニア集会
+**ようかん** | インフラ好きな学生エンジニア（猫）
 
 ---
 
 <!-- _class: lead -->
 
-# Kubernetesって聞いたことありますか？
+# その前に、「コンテナ」って説明できる？
+---
+# 復習）コンテナとは
+
 
 ---
 
