@@ -10,19 +10,17 @@
 <!-- _class: lead -->
 
 # 自己紹介
-
-- **名前**: youkan
-- **仕事**: インフラエンジニア / SRE
-- **興味**:
-  - 自宅サーバー / Homelab
-  - Kubernetes / コンテナ技術
-  - 自動化 / IaC
-- **SNS**: @youkan
+<img src="https://avatars.githubusercontent.com/u/170346546?v=4"  width="200"
+  height="200">
+- **名前**: ようかん
+- **好きなもの**:
+  - 自宅サーバー、Kubernetes、自動化
+  - VRChat、かわいいもの
 
 <!-- @end section -->
 
 ---
 
 <!-- @section compact -->
-**youkan** | インフラエンジニア / SRE (@youkan)
+**ようかん**
 <!-- @end section -->
