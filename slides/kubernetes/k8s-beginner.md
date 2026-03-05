@@ -21,7 +21,8 @@ footer: 'Kubernetes入門 | youkan.uk'
 # その前に、「コンテナ」って説明できる？
 ---
 # 復習）コンテナとは
-
+なんか分離できるやつ
+@logo(docker, 200)
 
 ---
 
